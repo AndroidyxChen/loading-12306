@@ -1,6 +1,6 @@
 # loading-12306
 仿PC端12306的刷新loading的自定义view
-
+```
 核心代码及实现逻辑如下：
         mPaint.setColor(mColor);
         mPaint.setTextSize(50);
@@ -35,6 +35,7 @@
                 invalidate();
             }
         });
+```
 --------------------- 
 详细内容可到CSDN查看
 作者：不二程序员 
