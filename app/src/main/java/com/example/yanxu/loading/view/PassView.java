@@ -16,7 +16,7 @@ import com.example.yanxu.loading.R;
 
 /**
  * Created by chen on 2018/12/12.
- * 仿PC端12306的刷新的动画
+ * 仿PC端12306的刷新loading动画的自定义view
  */
 
 public class PassView extends View {
@@ -53,6 +53,11 @@ public class PassView extends View {
         mHeight = (int) (2 * mRadius);
     }
 
+    /**
+     * 重写onMeasure方法，解决wrap_content问题，因为：
+     * 直接继承View的自定义控件需要重写onMeasure方法并设置wrap_content时的自身大小，否则在布局中使用wrap_content就相当于使用match_parent
+     * 这里的view默认宽高为了方便直接指定为小圆的直径
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -69,6 +74,10 @@ public class PassView extends View {
         }
     }
 
+    /**
+     * 重写onDraw方法实现自己的想要的效果，同时处理padding问题，因为：
+     * 绘制的时候需要考虑到View四周的空白，即padding，否则计算会有偏差
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -84,9 +93,9 @@ public class PassView extends View {
         //1、动画开启前，theCircle的初始值为-1，所以初始化时只走canvas.drawCircle()方法，即所有位置均为蓝色
         //2、动画开启后，theCircle=0时不改变颜色，即所有位置均为蓝色
         //3、继续，theCircle=1、i=2时，第一个位置依旧为蓝色，第二个及剩余其他位置为灰色
-        //4、继续，theCircle=2，即i=3时，第一、二个位置依旧为蓝色，第三个及剩余其他位置为灰色
+        //4、继续，theCircle=2，i=3时，第一、二个位置依旧为蓝色，第三个及剩余其他位置为灰色
         //5、......
-        //6、theCircle=11,即i=12时，第一到十一个位置全部变为蓝色,剩余的第十二个为灰色
+        //6、theCircle=11,i=12时，第一到十一个位置全部为蓝色,剩余的第十二个为灰色
         //7、直到，theCircle=0,循环继续
         //注：思路重点为，Paint使用的是同一个，所以在重新setColor()前的颜色是一样的，setColor()后的颜色是另一样的
         for (int i = 1; i <= 12; i++) {
@@ -104,15 +113,16 @@ public class PassView extends View {
         if (animator != null)
             animator.cancel();
         animator = ValueAnimator.ofInt(0, 12);
-        animator.setDuration(2000);
-        animator.setRepeatMode(ValueAnimator.RESTART);
-        animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.setInterpolator(new LinearInterpolator());
+        animator.setDuration(2000);//动画时长
+        animator.setRepeatMode(ValueAnimator.RESTART);//动画的重复次数
+        animator.setRepeatCount(ValueAnimator.INFINITE);//动画的重复模式
+        animator.setInterpolator(new LinearInterpolator());//线性插值器：匀速动画
+        //监听动画过程
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+                //获取当前动画的进度值，此处的theCircle值为（0、1、2...11、0）
                 theCircle = ((int) animation.getAnimatedValue() % 12);
-                //此处的theCircle值为（0、1、2...11、0）
                 invalidate();
             }
         });
