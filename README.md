@@ -1,5 +1,8 @@
 # loading-12306
 仿PC端12306的刷新loading的自定义view
+
+效果图如下：
+![实现后的效果图](https://img-blog.csdnimg.cn/20181227201226623.gif)
 ```
 核心代码及实现逻辑如下：
         mPaint.setColor(mColor);
